@@ -6,6 +6,8 @@
 #
 attrs==20.3.0
     # via pytest
+decorator==5.0.7
+    # via validators
 iniconfig==1.1.1
     # via pytest
 packaging==20.9
@@ -18,5 +20,9 @@ pyparsing==2.4.7
     # via packaging
 pytest==6.2.3
     # via site-check (setup.py)
+six==1.15.0
+    # via validators
 toml==0.10.2
     # via pytest
+validators==0.18.2
+    # via site-check (setup.py)

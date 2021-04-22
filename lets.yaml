@@ -43,10 +43,18 @@ commands:
         pip-compile --upgrade
       fi
 
+  compile-deps:
+    depends: [check_vevn]
+    options: |
+      Usage: lets compile-deps
+    cmd: pip-compile
+
   checker:
     description: Run checker/producer module
     depends: [check_vevn]
-    cmd: python -m checker
+    options: |
+      Usage: lets checker <site>
+    cmd: python -m checker ${LETSOPT_SITE}
 
   consumer:
     description: Run consumer module
