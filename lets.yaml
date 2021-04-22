@@ -1,0 +1,52 @@
+shell: bash
+
+env:
+  PYTHON_VERSION: "3.8"
+
+commands:
+  check_vevn:
+    cmd: |
+      if [[ ! -d .venv ]]; then
+          echo "Please run lets venv to create and source into virtual environment"
+          exit 0
+      fi
+
+  venv:
+    cmd: |
+      if [[ ! -d .venv ]]; then
+        python${PYTHON_VERSION} -m venv .venv
+        source .venv/bin/activate
+        pip install -r requirements.txt
+        pip install pip-tools
+      else
+        source .venv/bin/activate
+      fi
+
+  test:
+    depends: [check_vevn]
+    cmd: pytest
+
+  install:
+    depends: [check_vevn]
+    cmd: pip install -r requirements.txt
+
+  update-deps:
+    depends: [check_vevn]
+    options: |
+      Usage: lets update-deps [<package>]
+    cmd: |
+      if [[ -n "${LETSOPT_PACKAGE}" ]];then
+        pip-compile --upgrade-package "${LETSOPT_PACKAGE}"
+      else
+        pip-compile --upgrade
+      fi
+
+  checker:
+    description: Run checker/producer module
+    depends: [check_vevn]
+    cmd: python -m checker
+
+  consumer:
+    description: Run consumer module
+    depends: [check_vevn]
+    cmd: python -m consumer
