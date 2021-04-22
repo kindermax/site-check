@@ -20,15 +20,15 @@ commands:
         source .venv/bin/activate
         pip install -r requirements.txt
         pip install pip-tools
-      else
-        source .venv/bin/activate
       fi
+      echo "Run source .venv/bin/activate"
+
 
   test:
     depends: [check_vevn]
     cmd: pytest
 
-  install:
+  install-deps:
     depends: [check_vevn]
     cmd: pip install -r requirements.txt
 
@@ -59,3 +59,19 @@ commands:
     description: Run consumer module
     depends: [check_vevn]
     cmd: python -m consumer
+
+  kafka:
+    cmd: docker-compose up kafka
+
+  kafka-console-consumer:
+    description: |
+      Consume from kafka topic, required arguments: --bootstrap-server and --topic
+    cmd:
+      - docker-compose
+      - run
+      - --rm
+      - -T
+      - kafka-console-consumer
+
+  postgres:
+    cmd: docker-compose up postgres

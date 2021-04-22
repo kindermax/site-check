@@ -13,6 +13,7 @@ setup(
     python_requires='>=3.8',
     install_requires=[
         'pytest',
-        'validators'
+        'validators',
+        'kafka-python'
     ]
 )
