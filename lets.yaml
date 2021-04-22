@@ -1,0 +1,77 @@
+shell: bash
+
+env:
+  PYTHON_VERSION: "3.8"
+  PYTHONUNBUFFERED: "1"
+  PYTHONPATH: .
+
+commands:
+  check_vevn:
+    cmd: |
+      if [[ ! -d .venv ]]; then
+          echo "Please run lets venv to create and source into virtual environment"
+          exit 0
+      fi
+
+  venv:
+    cmd: |
+      if [[ ! -d .venv ]]; then
+        python${PYTHON_VERSION} -m venv .venv
+        source .venv/bin/activate
+        pip install -r requirements.txt
+        pip install pip-tools
+      fi
+      echo "Run source .venv/bin/activate"
+
+
+  test:
+    depends: [check_vevn]
+    cmd: pytest
+
+  install-deps:
+    depends: [check_vevn]
+    cmd: pip install -r requirements.txt
+
+  update-deps:
+    depends: [check_vevn]
+    options: |
+      Usage: lets update-deps [<package>]
+    cmd: |
+      if [[ -n "${LETSOPT_PACKAGE}" ]];then
+        pip-compile --upgrade-package "${LETSOPT_PACKAGE}"
+      else
+        pip-compile --upgrade
+      fi
+
+  compile-deps:
+    depends: [check_vevn]
+    options: |
+      Usage: lets compile-deps
+    cmd: pip-compile
+
+  checker:
+    description: Run checker/producer module
+    depends: [check_vevn]
+    cmd:
+      - python -m checker
+
+  consumer:
+    description: Run consumer module
+    depends: [check_vevn]
+    cmd: python -m consumer
+
+  kafka:
+    cmd: docker-compose up kafka
+
+  kafka-console-consumer:
+    description: |
+      Consume from kafka topic, required arguments: --bootstrap-server and --topic
+    cmd:
+      - docker-compose
+      - run
+      - --rm
+      - -T
+      - kafka-console-consumer
+
+  postgres:
+    cmd: docker-compose up postgres
