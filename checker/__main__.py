@@ -1,37 +1,61 @@
 import sys
+
 from dataclasses import dataclass
+from argparse import (
+    ArgumentParser,
+)
 
 from checker import Checker
 from checker.exception import CheckerError
 from checker.validator import validate_url
 
 
+DEFAULT_INTERVAL = 10  # in seconds
+
+
 @dataclass
 class Args:
     site: str
+    interval: int
 
 
-def parse_args(args: list) -> Args:
-    if len(args) != 2:
-        print('Provide <site> argument')
-        sys.exit(1)
+def create_parser() -> ArgumentParser:
+    parser = ArgumentParser(description='Check site')
+    parser.add_argument(
+        'site',
+        type=str,
+        help='Specify site url to check',
+    )
 
-    site = sys.argv[1]
+    parser.add_argument(
+        '--interval',
+        dest='interval',
+        type=int,
+        help='Specify interval (in seconds) to check',
+        required=False,
+    )
 
-    validate_url(site)
+    return parser
+
+
+def parse_args(parser: ArgumentParser) -> Args:
+    args = parser.parse_args()
+    validate_url(args.site)
 
     return Args(
-        site=site
+        site=args.site,
+        interval=args.interval or DEFAULT_INTERVAL,
     )
 
 
 def run(args: Args):
-    checker = Checker(args.site)
+    checker = Checker(args.site, args.interval)
+    print(f'Running checker on {args.site} with interval {args.interval}')
     checker.run()
 
-
 try:
-    args = parse_args(sys.argv)
+    parser = create_parser()
+    args = parse_args(parser)
     run(args)
 except KeyboardInterrupt:
     print('Stopping checker ...')

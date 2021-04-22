@@ -19,7 +19,7 @@ lets vevn
 2. Run checked/producer
 
 ```shell
-lets checker
+lets checker https://google.com --interval=1
 ```
 
 3. Run consumer

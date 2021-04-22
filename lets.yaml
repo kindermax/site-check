@@ -52,9 +52,8 @@ commands:
   checker:
     description: Run checker/producer module
     depends: [check_vevn]
-    options: |
-      Usage: lets checker <site>
-    cmd: python -m checker ${LETSOPT_SITE}
+    cmd:
+      - python -m checker
 
   consumer:
     description: Run consumer module
