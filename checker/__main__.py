@@ -1,68 +1,40 @@
 import sys
+import logging
 
-from dataclasses import dataclass
-from argparse import (
-    ArgumentParser,
+from checker.checker import Checker
+from checker.config import (
+    parse_config,
+    Config,
 )
-
-from checker import Checker
 from checker.exception import CheckerError
-from checker.validator import validate_url
+from checker.kafka import create_kafka_producer
+from checker.parser import create_parser
+
+log = logging.getLogger(__name__)
 
 
-DEFAULT_INTERVAL = 10  # in seconds
+def setup_logging():
+    logging.basicConfig(level=logging.INFO)
 
 
-@dataclass
-class Args:
-    site: str
-    interval: int
-
-
-def create_parser() -> ArgumentParser:
-    parser = ArgumentParser(description='Check site')
-    parser.add_argument(
-        'site',
-        type=str,
-        help='Specify site url to check',
-    )
-
-    parser.add_argument(
-        '--interval',
-        dest='interval',
-        type=int,
-        help='Specify interval (in seconds) to check',
-        required=False,
-    )
-
-    return parser
-
-
-def parse_args(parser: ArgumentParser) -> Args:
-    args = parser.parse_args()
-    validate_url(args.site)
-
-    return Args(
-        site=args.site,
-        interval=args.interval or DEFAULT_INTERVAL,
-    )
-
-
-def run(args: Args):
-    checker = Checker(args.site, args.interval)
-    print(f'Running checker on {args.site} with interval {args.interval}')
+def run(config: Config):
+    log.info(f'Running checker with config {config}')
+    kafka_producer = create_kafka_producer(config.kafka_bootstrap)
+    checker = Checker(config, kafka_producer)
     checker.run()
 
+
 try:
+    setup_logging()
     parser = create_parser()
-    args = parse_args(parser)
-    run(args)
+    config = parse_config(parser)
+    run(config)
 except KeyboardInterrupt:
-    print('Stopping checker ...')
+    log.info('Stopping checker ...')
 except CheckerError as e:
-    print(f'Failed to run checker: {e}')
+    log.error(f'Failed to run checker: {e}')
     sys.exit(1)
 except Exception as e:
-    print(f'Unexpected exception: {e}')
+    log.exception('Unexpected exception')
     sys.exit(1)
 
