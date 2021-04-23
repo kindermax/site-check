@@ -26,7 +26,7 @@ commands:
 
   test:
     depends: [check_vevn]
-    cmd: pytest
+    cmd: pytest tests
 
   install-deps:
     depends: [check_vevn]
@@ -58,7 +58,8 @@ commands:
   consumer:
     description: Run consumer module
     depends: [check_vevn]
-    cmd: python -m consumer
+    cmd:
+      - python -m consumer
 
   kafka:
     cmd: docker-compose up kafka
@@ -75,3 +76,38 @@ commands:
 
   postgres:
     cmd: docker-compose up postgres
+
+  lint:
+    depends: [check_vevn]
+    cmd: |
+      mypy -p consumer -p checker
+
+  migrate-up:
+    env:
+      PGPASSWORD: postgres
+    options: |
+      usage: lets migrate-up [<num>]
+    cmd: |
+      if [[ -n ${LETSOPT_NUM} ]];then
+        psql -h localhost -p 5432 -U postgres -d site_check -f ./sql/up_${LETSOPT_NUM}.sql
+      else
+        for m in ./sql/up*.sql; do
+          echo "Migrating $m"
+          psql -h localhost -p 5432 -U postgres -d site_check -f $m
+        done
+      fi
+
+  migrate-down:
+    env:
+      PGPASSWORD: postgres
+    options: |
+      usage: lets migrate-down [<num>]
+    cmd: |
+      if [[ -n ${LETSOPT_NUM} ]];then
+        psql -h localhost -p 5432 -U postgres -d site_check -f ./sql/down_${LETSOPT_NUM}.sql
+      else
+        for m in ./sql/down*.sql; do
+          echo "Rollback migration $m"
+          psql -h localhost -p 5432 -U postgres -d site_check -f $m
+        done
+      fi

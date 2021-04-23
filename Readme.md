@@ -38,6 +38,17 @@ lets checker https://google.com --interval=1 --kafka-bootstrap=localhost:9002 --
 
 3. Run consumer 
 
+
+Before first run we have to migrate database schema
+
+```shell
+lets migrate-up
+# or 
+lets migrate-up 1 # where 1 is number of specific migration
+```
+
+Or `lets migrate-down` to rollback all migrations
+
 Locally
 
 ```shell

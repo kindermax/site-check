@@ -1,0 +1,2 @@
+class ConsumerError(Exception):
+    pass

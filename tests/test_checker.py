@@ -4,11 +4,9 @@ from unittest.mock import (
     Mock,
 )
 
-from checker.checker import (
-    Checker,
-    Check,
-)
+from checker.checker import Checker
 from checker.config import Config
+from common.check import Check
 
 
 def test_checker_smoke():
@@ -38,11 +36,12 @@ def test_checker_send_event():
 
     check = Check(
         response_time=100,
-        http_status_code=201,
+        status_code=201,
+        url='http://google.com'
     )
     with patch.object(Checker, '_make_request', return_value=check):
         checker.run(once=True)
 
     producer.send.assert_called_once_with(
-        'checks', b'{"response_time": 100, "http_status_code": 201}'
+        'checks', b'{"response_time": 100, "status_code": 201, "url": "http://google.com"}'
     )
