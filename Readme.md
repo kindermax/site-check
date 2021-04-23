@@ -38,7 +38,13 @@ Quick check whats going on in local kafka topic:
 With cloud provider (Aiven)
 
 ```shell
-lets checker https://google.com --interval=1 --kafka-bootstrap=localhost:9002 --kafka-topic=checks
+lets checker https://google.com \
+  --interval=1 \
+  --kafka-bootstrap=kafka-site-check-project-7d36.aivencloud.com:13611 \
+  --kafka-topic=checks \
+  --kafka-ca-path=./certs/ca.pem \
+  --kafka-cert-path=./certs/service.cert \
+  --kafka-key-path=./certs/service.key
 ```
 
 3. Run consumer 
@@ -70,7 +76,13 @@ Quick check whats going on in local kafka topic:
 With cloud provider (Aiven)
 
 ```shell
-lets consumer --kafka-bootstrap=localhost:9002 --kafka-topic=checks --postgres-uri=postgres://postgres:postgres@localhost:5432/site_check
+lets consumer \
+  --kafka-bootstrap=kafka-site-check-project-7d36.aivencloud.com:13611 \
+  --kafka-topic=checks \
+  --kafka-ca-path=./certs/ca.pem \
+  --kafka-cert-path=./certs/service.cert \
+  --kafka-key-path=./certs/service.key \
+  --postgres-uri="postgres://user:password@pg-site-check-project-7d36.aivencloud.com:13609/site_check?sslmode=require"
 ```
 
 ## Test

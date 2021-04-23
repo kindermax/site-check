@@ -9,9 +9,12 @@ from consumer.config import Config
 
 def test_consumer_handle_event():
     config = Config(
-        'localhost:9002',
-        'checks',
-        'postgres://user:pass@localhost:port/db'
+        kafka_bootstrap='localhost:9002',
+        kafka_topic='checks',
+        kafka_ca_path='./',
+        kafka_key_path='./',
+        kafka_cert_path='./',
+        postgres_uri='postgres://user:pass@localhost:port/db'
     )
 
     check = Check(

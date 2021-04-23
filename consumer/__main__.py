@@ -17,7 +17,13 @@ log = logging.getLogger(__name__)
 
 def run(config: Config):
     log.info(f'Running consumer with config {config}')
-    kafka_consumer = create_kafka_consumer(config.kafka_bootstrap, config.kafka_topic)
+    kafka_consumer = create_kafka_consumer(
+        config.kafka_bootstrap,
+        config.kafka_topic,
+        config.kafka_ca_path,
+        config.kafka_key_path,
+        config.kafka_cert_path
+    )
     db = create_db_client(config.postgres_uri)
     consumer = Consumer(config, kafka_consumer, db)
     consumer.run()

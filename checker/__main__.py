@@ -19,7 +19,12 @@ def setup_logging():
 
 def run(config: Config):
     log.info(f'Running checker with config {config}')
-    kafka_producer = create_kafka_producer(config.kafka_bootstrap)
+    kafka_producer = create_kafka_producer(
+        config.kafka_bootstrap,
+        config.kafka_ca_path,
+        config.kafka_key_path,
+        config.kafka_cert_path
+    )
     checker = Checker(config, kafka_producer)
     checker.run()
 

@@ -1,5 +1,7 @@
 from argparse import ArgumentParser
 
+from common.parser import add_kafka_options
+
 
 def create_parser() -> ArgumentParser:
     parser = ArgumentParser(description='Check site')
@@ -17,23 +19,7 @@ def create_parser() -> ArgumentParser:
         required=False,
     )
 
-    # TODO may be many
-    # type list int
-    parser.add_argument(
-        '--kafka-bootstrap',
-        dest='kafka_bootstrap',
-        type=str,
-        help='Specify kafka bootstrap servers',
-        required=True,
-    )
-
-    parser.add_argument(
-        '--kafka-topic',
-        dest='kafka_topic',
-        type=str,
-        help='Specify kafka topic',
-        required=True,
-    )
+    add_kafka_options(parser)
 
     return parser
 
