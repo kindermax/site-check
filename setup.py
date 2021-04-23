@@ -14,6 +14,9 @@ setup(
     install_requires=[
         'pytest',
         'validators',
-        'kafka-python'
+        'kafka-python',
+        'psycopg2-binary',
+        'mypy',
+        'url-normalize',
     ]
 )

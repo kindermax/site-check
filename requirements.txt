@@ -12,10 +12,16 @@ iniconfig==1.1.1
     # via pytest
 kafka-python==2.0.2
     # via site-check (setup.py)
+mypy-extensions==0.4.3
+    # via mypy
+mypy==0.812
+    # via site-check (setup.py)
 packaging==20.9
     # via pytest
 pluggy==0.13.1
     # via pytest
+psycopg2-binary==2.8.6
+    # via site-check (setup.py)
 py==1.10.0
     # via pytest
 pyparsing==2.4.7
@@ -23,8 +29,16 @@ pyparsing==2.4.7
 pytest==6.2.3
     # via site-check (setup.py)
 six==1.15.0
-    # via validators
+    # via
+    #   url-normalize
+    #   validators
 toml==0.10.2
     # via pytest
+typed-ast==1.4.3
+    # via mypy
+typing-extensions==3.7.4.3
+    # via mypy
+url-normalize==1.4.3
+    # via site-check (setup.py)
 validators==0.18.2
     # via site-check (setup.py)
