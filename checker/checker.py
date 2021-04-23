@@ -12,7 +12,7 @@ from checker.config import Config
 @dataclass
 class Check:
     # in milliseconds
-    response_time: float
+    response_time: int
     http_status_code: int
 
     def serialize(self) -> bytes:
