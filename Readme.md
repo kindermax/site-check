@@ -6,6 +6,11 @@ Install `lets` https://lets-cli.org/docs/installation.
 
 How to use https://lets-cli.org/docs/getting_started
 
+
+## Architecture
+
+![alt text](./docs/site_check_arch.png)
+
 ## Run
 
 Python >= 3.8 required
