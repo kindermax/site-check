@@ -11,10 +11,13 @@ from common.check import Check
 
 def test_checker_smoke():
     config = Config(
-        'https://google.com',
-        10,
-        'localhost:9002',
-        'checks'
+        site='https://google.com',
+        interval=10,
+        kafka_bootstrap='localhost:9002',
+        kafka_topic='checks',
+        kafka_ca_path='./',
+        kafka_key_path='./',
+        kafka_cert_path='./'
     )
 
     producer = MagicMock()
@@ -25,10 +28,13 @@ def test_checker_smoke():
 
 def test_checker_send_event():
     config = Config(
-        'https://google.com',
-        10,
-        'localhost:9002',
-        'checks'
+        site='https://google.com',
+        interval=10,
+        kafka_bootstrap='localhost:9002',
+        kafka_topic='checks',
+        kafka_ca_path='./',
+        kafka_key_path='./',
+        kafka_cert_path='./'
     )
 
     producer = Mock()

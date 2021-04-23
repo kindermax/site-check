@@ -83,31 +83,31 @@ commands:
       mypy -p consumer -p checker
 
   migrate-up:
-    env:
-      PGPASSWORD: postgres
     options: |
-      usage: lets migrate-up [<num>]
+      usage: lets migrate-up [<num>] [--uri=<uri>]
     cmd: |
+      URI="${LETSOPT_URI:-postgres://postgres:postgres@localhost:5432/site_check}"
+
       if [[ -n ${LETSOPT_NUM} ]];then
-        psql -h localhost -p 5432 -U postgres -d site_check -f ./sql/up_${LETSOPT_NUM}.sql
+        psql "${URI}" -f ./sql/up_${LETSOPT_NUM}.sql
       else
         for m in ./sql/up*.sql; do
           echo "Migrating $m"
-          psql -h localhost -p 5432 -U postgres -d site_check -f $m
+          psql ${URI} -f $m
         done
       fi
 
   migrate-down:
-    env:
-      PGPASSWORD: postgres
     options: |
-      usage: lets migrate-down [<num>]
+      usage: lets migrate-down [<num>] [--uri=<uri>]
     cmd: |
+      URI="${LETSOPT_URI:-postgres://postgres:postgres@localhost:5432/site_check}"
+
       if [[ -n ${LETSOPT_NUM} ]];then
-        psql -h localhost -p 5432 -U postgres -d site_check -f ./sql/down_${LETSOPT_NUM}.sql
+        psql "${URI}" -f ./sql/down_${LETSOPT_NUM}.sql
       else
         for m in ./sql/down*.sql; do
           echo "Rollback migration $m"
-          psql -h localhost -p 5432 -U postgres -d site_check -f $m
+          psql "${URI}" -f $m
         done
       fi
